@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up & Sign In</title>
+    <style>
+        /* Global styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Form container */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        label {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .signin-link {
+            margin-top: 15px;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .signin-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .signin-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            display: none; /* Initially hidden */
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .sidebar button {
+            padding: 10px;
+            width: 100%;
+            margin-top: 15px;
+            color: #fff;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .sidebar button:hover {
+            background-color: #555;
+        }
+
+        .logout-button {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #d9534f;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+
+        /* Main content styles */
+        .main-content {
+            display: none; /* Initially hidden */
+            margin-left: 250px;
+            padding: 30px;
+            width: 100%;
+        }
+
+        .query-section {
+            margin-top: 20px;
+        }
+
+        .query-section h2 {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .query-section select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Query Result */
+        #queryResult {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sign Up and Sign In Form -->
+<div class="container" id="signupFormSection">
+    <div class="form-section">
+        <h2>Sign Up</h2>
+        <p>Welcome to the logistics supply chain platform. Register as a member to experience.</p>
+
+        <form id="signupForm">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+
+            <button type="submit">Create Account</button>
+
+            <div class="signin-link">
+                Already a member? <a href="#" onclick="showSignIn()">Sign in</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Sign In Form (Initially hidden) -->
+<div class="container" id="signinFormSection" style="display: none;">
+    <div class="form-section">
+        <h2>Sign In</h2>
+        <p>Welcome back. Please log in to continue.</p>
+
+        <form id="signinForm">
+            <label for="signinEmail">E-mail</label>
+            <input type="email" id="signinEmail" required>
+
+            <label for="signinPassword">Password</label>
+            <input type="password" id="signinPassword" required>
+
+            <button type="submit">Sign In</button>
+
+            <div class="signin-link">
+                Don't have an account? <a href="#" onclick="showSignUp()">Sign up</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Sidebar (Initially hidden) -->
+<div class="sidebar" id="sidebar">
+    <h2>Menu</h2>
+    <button onclick="goHome()">Home</button>
+    <button class="logout-button" onclick="logout()">Log Out</button>
+</div>
+
+<!-- Main Content Area (Initially hidden) -->
+<div class="main-content" id="mainContent">
+    <h2>Welcome to the Dashboard!</h2>
+
+    <div class="query-section">
+        <h2>Select a Query</h2>
+        <select id="querySelect" onchange="handleQuerySelection()">
+            <option value="query1">1. List all products with their prices</option>
+            <option value="query2">2. Get product details by product ID</option>
+            <option value="query3">3. Get orders by customer</option>
+            <option value="query4">4. Get order details by order ID</option>
+            <option value="query5">5. Get average product price</option>
+            <option value="query6">6. Get the number of orders per product</option>
+            <option value="query7">7. Get product price range by category</option>
+            <option value="query8">8. Get product detail by ID</option>
+            <option value="query9">9. List all customers</option>
+            <option value="query10">10. Get customer order history</option>
+            <option value="query11">11. Get customer product preferences</option>
+            <option value="query12">12. Update product price (Procedure)</option>
+            <option value="query13"> 13. Get customer details by ID</option>
+            <option value="query14">14. Add a new product (Procedure)</option>
+            <option value="query15">15. List all orders</option>
+            <option value="query16">16. Get average order value by order ID (Function)</option>
+            <option value="query17">17. Delete a product by ID</option>
+           
+            <!-- other options -->
+        </select>
+    </div>
+
+    <!-- Input fields for specific queries -->
+    <div id="inputFields" style="display: none; margin-top: 20px;">
+        <label for="input1">Input 1:</label>
+        <input type="text" id="input1" placeholder="Enter value for Input 1">
+        
+        <label for="input2" style="display: none;">Input 2:</label>
+        <input type="text" id="input2" placeholder="Enter value for Input 2" style="display: none;">
+
+    </div>
+    <button onclick="executeQueryWithInputs()">Submit Query</button>
+
+
+    <!-- Query Result Display -->
+    <div id="queryResult"></div>
+</div>
+
+<script>
+    function showSignUp() {
+        document.getElementById("signupFormSection").style.display = "block";
+        document.getElementById("signinFormSection").style.display = "none";
+    }
+
+    function showSignIn() {
+        document.getElementById("signupFormSection").style.display = "none";
+        document.getElementById("signinFormSection").style.display = "block";
+    }
+
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userPassword", password);
+
+        alert("Account created successfully! Please sign in.");
+        showSignIn();
+    });
+
+    document.getElementById("signinForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById("signinEmail").value;
+        const password = document.getElementById("signinPassword").value;
+
+        const storedEmail = localStorage.getItem("userEmail");
+        const storedPassword = localStorage.getItem("userPassword");
+
+        if (email === storedEmail && password === storedPassword) {
+            document.getElementById("mainContent").style.display = "block";
+            document.getElementById("sidebar").style.display = "flex";
+            document.getElementById("signinFormSection").style.display = "none";
+        } else {
+            alert("Invalid email or password. Please try again.");
+        }
+    });
+
+    function logout() {
+        document.getElementById("mainContent").style.display = "none";
+        document.getElementById("sidebar").style.display = "none";
+        showSignIn();
+    }
+
+    function goHome() {
+        alert("Navigating to the home page...");
+    }
+    
+    function handleQuerySelection() {
+        const selectedQuery = document.getElementById("querySelect").value;
+    
+        const inputFields = document.getElementById("inputFields");
+        const input2 = document.getElementById("input2");
+    
+        // Show input fields only for queries 12, 14, and 16
+        if (selectedQuery === "query12" || selectedQuery === "query14" || selectedQuery === "query16" || selectedQuery === "query17") {
+            inputFields.style.display = "block";
+            
+            if (selectedQuery === "query12") {
+                document.getElementById("input1").placeholder = "Enter Product ID";
+                input2.style.display = "block";
+                input2.placeholder = "Enter New Price";
+            } else if (selectedQuery === "query14") {
+                document.getElementById("input1").placeholder = "Enter New Product Name";
+                input2.style.display = "block";
+                input2.placeholder = "Enter Product Category";
+            } else if (selectedQuery === "query16") {
+                document.getElementById("input1").placeholder = "Enter Order ID";
+                input2.style.display = "none";
+            }
+            else if (selectedQuery === "query17") {
+                document.getElementById("input1").placeholder = "Enter Order ID";
+                input2.style.display = "none";
+            }
+        } else {
+            inputFields.style.display = "none";
+        }
+    }
+    
+        
+    function executeQueryWithInputs() {
+        const selectedQuery = document.getElementById("querySelect").value;
+        const input1 = document.getElementById("input1").value;
+        const input2 = document.getElementById("input2").value;
+    
+        // Base URL for executing the selected query
+        let queryUrl = `http://localhost:5002/execute_query/${selectedQuery}`;
+    
+        // Append query parameters only for queries 12, 14, and 16
+        if (selectedQuery === "query12") {
+            queryUrl += `?productId=${input1}&newPrice=${input2}`;
+        } else if (selectedQuery === "query14") {
+            queryUrl += `?productName=${input1}&productCategory=${input2}`;
+        } else if (selectedQuery === "query16") {
+            queryUrl += `?orderId=${input1}`;
+        }else if (selectedQuery === "query17") {
+            queryUrl += `?orderId=${input1}`;
+        }
+    
+    
+        // Fetch and display the query results
+        fetch(queryUrl)
+            .then(response => response.json())
+            .then(data => {
+                let resultHTML = "<h3>Query Results:</h3>";
+                if (data.error) {
+                    resultHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+                } else {
+                    resultHTML += "<pre>" + JSON.stringify(data.result, null, 2) + "</pre>";
+                }
+                document.getElementById("queryResult").innerHTML = resultHTML;
+            })
+            .catch(error => {
+                document.getElementById("queryResult").innerHTML = `<p style="color: red;">Error executing query: ${error}</p>`;
+            });
+    }
+    
+    
+</script>
+
+</body>
+</html>
